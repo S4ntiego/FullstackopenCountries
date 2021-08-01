@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import getAll from "./services/restCountries";
+import Filter from "./components/Filter";
+import Countries from "./components/Countries";
 
 function App() {
+  const [newSearch, setNewSearch] = useState("");
+  const [countries, setCountries] = useState([]);
+
+  const handleSearchChange = event => {
+    setNewSearch(event.target.value);
+  };
+
+  useEffect(() => {
+    getAll().then(response => setCountries(response));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Filter
+        newSearch={newSearch}
+        handleSearchChange={handleSearchChange}
+      />
+      <Countries countries={countries} newSearch={newSearch} />
     </div>
   );
 }
